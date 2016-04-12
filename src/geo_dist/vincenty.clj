@@ -1,15 +1,20 @@
 (ns geo-dist.vincenty
+  "Vincenty approximations using WGS84
+
+  All angles in degrees and distances in meters."
   (:require [geo-dist.math :refer :all]))
 
 (def ^:private a 6378137.)
 (def ^:private b 6356752.314245)
 (def ^:private f (/ (- a b) a))
 
-(defn inverse [lat1 lon1 lat2 lon2]
-  (let [ϕ1 (->radians lat1)
-        ϕ2 (->radians lat2)
-        λ1 (->radians lon1)
-        λ2 (->radians lon2)
+(defn inverse
+  "Returns the distance between (lat1, lon1) (lat2, lon2)."
+  [lat1 lon1 lat2 lon2]
+  (let [ϕ1 (deg->rad lat1)
+        ϕ2 (deg->rad lat2)
+        λ1 (deg->rad lon1)
+        λ2 (deg->rad lon2)
         L (- λ2 λ1)
         tanU1 (* (- 1 f) (tan ϕ1))
         cosU1 (/ 1 (sqrt (+ 1 (sq tanU1))))
@@ -31,7 +36,7 @@
                 σ (atan2 sinσ cosσ)
                 sinα (/ (* cosU1 cosU2 sinλ) sinσ)
                 cosSqα (- 1 (sq sinα))
-                cos2σM (zeroIfNaN (- cosσ (/ (* 2 sinU1 sinU2) cosSqα)))
+                cos2σM (zero-if-NaN (- cosσ (/ (* 2 sinU1 sinU2) cosSqα)))
                 C (* (/ f 16) cosSqα (+ 4 (* f (- 4 (* 3 cosSqα)))))
                 λ'' (+ L (* (- 1 C) f sinα (+ σ (* C sinσ (+ cos2σM (* C cosσ (+ -1 (* 2 cos2σM cos2σM))))))))]
             (if (and (> (abs (- λ'' λ)) 1e-12) (< (inc iterations) 200))

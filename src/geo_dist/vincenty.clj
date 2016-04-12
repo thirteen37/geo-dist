@@ -9,7 +9,7 @@
 (def ^:private f (/ (- a b) a))
 
 (defn inverse
-  "Returns the distance between (lat1, lon1) (lat2, lon2)."
+  "Returns the distance between (lat1, lon1) (lat2, lon2)"
   [lat1 lon1 lat2 lon2]
   (let [ϕ1 (deg->rad lat1)
         ϕ2 (deg->rad lat2)
@@ -44,6 +44,47 @@
               (let [uSq (/ (* cosSqα (- (sq a) (sq b))) (sq b))
                     A (+ 1 (* (/ uSq 16384) (+ 4096 (* uSq (+ -768 (* uSq (- 320 (* 175 uSq))))))))
                     B (* (/ uSq 1024) (+ 256 (* uSq (+ -128 (* uSq (- 74 (* 47 uSq)))))))
-                    Δσ (* B sinσ (+ cos2σM (* (/ B 4) (- (* cosσ (+ -1 (* 2 (sq cos2σM))))
-                                                         (* (/ B 6) cos2σM (+ -3 (* 4 (sq sinσ))) (+ -3 (* 4 (sq cos2σM))))))))]
+                    Δσ (* B sinσ
+                          (+ cos2σM (* (/ B 4)
+                                       (- (* cosσ (+ -1 (* 2 (sq cos2σM))))
+                                          (* (/ B 6) cos2σM (+ -3 (* 4 (sq sinσ))) (+ -3 (* 4 (sq cos2σM))))))))]
                 (* b A (- σ Δσ))))))))))
+
+(defn direct
+  "Returns the (lat, lon) that is distance away from (lat, lon) in the
+  direction of bearing"
+  [lat lon bearing distance]
+  (let [ϕ1 (deg->rad lat)
+        λ1 (deg->rad lon)
+        α1 (deg->rad bearing)
+        s distance
+        sinα1 (sin α1)
+        cosα1 (cos α1)
+        tanU1 (* (- 1 f) (tan ϕ1))
+        cosU1 (/ 1 (sqrt (+ 1 (sq tanU1))))
+        sinU1 (* tanU1 cosU1)
+        σ1 (atan2 tanU1 cosα1)
+        sinα (* cosU1 sinα1)
+        cosSqα (- 1 (sq sinα))
+        uSq (/ (* cosSqα (- (sq a) (sq b))) (sq b))
+        A (+ 1 (* (/ uSq 16384) (+ 4096 (* uSq (+ -768 (* uSq (- 320 (* 175 uSq))))))))
+        B (* (/ uSq 1024) (+ 256 (* uSq (+ -128 (* uSq (- 74 (* 47 uSq)))))))]
+    (loop [σ (/ s (* b A))
+           σ' 0
+           iterations 0]
+      (let [cos2σM (cos (+ (* 2 σ1) σ))
+            sinσ (sin σ)
+            cosσ (cos σ)
+            Δσ (* B sinσ
+                  (+ cos2σM (/ B (* 4 (- (* cosσ (+ -1 (* 2 (sq cos2σM))))
+                                         (* (/ B 6) cos2σM (+ -3 (* 4 (sq sinσ))) (+ -3 (* 4 (sq cos2σM)))))))))
+            σ'' (+ (/ s (* b A)) Δσ)]
+        (if (and (> (abs (- σ σ'')) 1e-12) (< (inc iterations) 200))
+          (recur σ'' σ (inc iterations))
+          (let [x (- (* sinU1 sinσ) (* cosU1 cosσ cosα1))
+                φ2 (atan2 (+ (* sinU1 cosσ) (* cosU1 sinσ cosα1)) (* (- 1 f) (sqrt (+ (sq sinα) (sq x)))))
+                λ (atan2 (* sinσ sinα1) (- (* cosU1 cosσ) (* sinU1 sinσ cosα1)))
+                C (* (/ f 16) cosSqα (+ 4 (* f (- 4 (* 3 cosSqα)))))
+                L (- λ (* (- 1 C) f sinα (+ σ (* C sinσ (+ cos2σM (* C cosσ (+ -1 (* 2 (sq cos2σM)))))))))
+                λ2 (- (mod (+ λ1 L (* 3 pi)) (* 2 pi)) pi)]
+            [(rad->deg φ2) (rad->deg λ2)]))))))

@@ -1,0 +1,13 @@
+(ns geo-dist.math)
+
+(defn sin [x] (Math/sin x))
+(defn cos [x] (Math/cos x))
+(defn tan [x] (Math/tan x))
+(defn atan2 [x y] (Math/atan2 x y))
+(defn sqrt [x] (Math/sqrt x))
+(defn sq [x] (* x x))
+(defn ->radians [degrees] (* (/ degrees 180.0) Math/PI))
+(defn NaN? [d] (Double/isNaN d))
+(defn abs [x] (Math/abs x))
+(defn zeroIfNaN [x] (if (NaN? x) 0 x))
+(defn float= [x y] (< (abs (- 1.0 (/ x y))) 1e-6))

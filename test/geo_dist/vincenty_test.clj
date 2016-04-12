@@ -7,7 +7,7 @@
   (testing "Different coordinates"
     (is (float= (inverse 50 -5 54 -3) 465732.196)))
   (testing "Same coordinates"
-    (is (= (inverse 50 -5 50 -5) 0))))
+    (is (= (inverse 50 -5 50 -5) 0.))))
 
 (deftest direct-test
   (testing "Somewhere far"

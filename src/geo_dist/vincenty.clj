@@ -23,15 +23,15 @@
         cosU2 (/ 1 (sqrt (+ 1 (sq tanU2))))
         sinU2 (* tanU2 cosU2)]
     (loop [λ L
-           λ' 0
-           iterations 0]
+           λ' (double 0.)
+           iterations (int 0)]
       (let [sinλ (sin λ)
             cosλ (cos λ)
             sinSqσ (+ (sq (* cosU2 sinλ))
                       (sq (- (* cosU1 sinU2) (* sinU1 cosU2 cosλ))))
             sinσ (sqrt sinSqσ)]
         (if (zero? sinσ)
-          0
+          (double 0.)
           (let [cosσ (+ (* sinU1 sinU2) (* cosU1 cosU2 cosλ))
                 σ (atan2 sinσ cosσ)
                 sinα (/ (* cosU1 cosU2 sinλ) sinσ)
@@ -57,7 +57,7 @@
   (let [ϕ1 (deg->rad lat)
         λ1 (deg->rad lon)
         α1 (deg->rad bearing)
-        s distance
+        s (double distance)
         sinα1 (sin α1)
         cosα1 (cos α1)
         tanU1 (* (- 1 f) (tan ϕ1))
@@ -70,8 +70,8 @@
         A (+ 1 (* (/ uSq 16384) (+ 4096 (* uSq (+ -768 (* uSq (- 320 (* 175 uSq))))))))
         B (* (/ uSq 1024) (+ 256 (* uSq (+ -128 (* uSq (- 74 (* 47 uSq)))))))]
     (loop [σ (/ s (* b A))
-           σ' 0
-           iterations 0]
+           σ' (double 0.)
+           iterations (int 0)]
       (let [cos2σM (cos (+ (* 2 σ1) σ))
             sinσ (sin σ)
             cosσ (cos σ)

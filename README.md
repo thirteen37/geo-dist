@@ -1,8 +1,15 @@
-# geo-dist
+# geo-dist [![Clojars Project](https://img.shields.io/clojars/v/geo-dist.svg)](https://clojars.org/geo-dist) [![Circle CI](https://circleci.com/gh/thirteen37/geo-dist.svg?style=svg)](https://circleci.com/gh/thirteen37/geo-dist)
 
 Geodesic distance functions for Clojure
 
 ## Usage
+
+Available on [Clojars](https://clojars.org/geo-dist).
+
+With Leiningen:
+
+    [geo-dist "0.1.0-SNAPSHOT"]
+
 
 [Vincenty approximations](https://en.wikipedia.org/wiki/Vincenty%27s_formulae)
 using the WGS84 ellipsoid are in `geo-dist.vincenty`. There is

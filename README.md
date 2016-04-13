@@ -8,7 +8,7 @@ Available on [Clojars](https://clojars.org/geo-dist).
 
 With Leiningen:
 
-    [geo-dist "0.1.0-SNAPSHOT"]
+    [geo-dist "0.1.0"]
 
 
 [Vincenty approximations](https://en.wikipedia.org/wiki/Vincenty%27s_formulae)

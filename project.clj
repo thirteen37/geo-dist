@@ -1,4 +1,4 @@
-(defproject geo-dist "0.1.0"
+(defproject geo-dist "0.1.1-SNAPSHOT"
   :description "Geodesic distance calculations"
   :url "https://github.com/thirteen37/geo-dist"
   :license {:name "Apache License"

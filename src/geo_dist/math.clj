@@ -3,6 +3,7 @@
 (defn sin ^double [^double x] (Math/sin x))
 (defn cos ^double [^double x] (Math/cos x))
 (defn tan ^double [^double x] (Math/tan x))
+(defn asin ^double [^double x] (Math/asin x))
 (defn atan2 ^double [^double x ^double y] (Math/atan2 x y))
 (defn sqrt ^double [^double x] (Math/sqrt x))
 (defn sq ^double [^double x] (* x x))
@@ -12,4 +13,6 @@
 (defn NaN? [^double d] (Double/isNaN d))
 (defn abs ^double [^double x] (Math/abs x))
 (defn zero-if-NaN ^double [^double x] (if (NaN? x) 0. x))
-(defn float= [x y] (< (abs (- 1.0 (/ x y))) 1e-6))
+(defn float=
+  ([x y] (float= x y 1e-6))
+  ([x y eps] (< (abs (- 1.0 (/ x y))) eps)))

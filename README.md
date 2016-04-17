@@ -11,6 +11,10 @@ With Leiningen:
     [geo-dist "0.1.1-SNAPSHOT"]
 
 
+[Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula))
+using Earth radius of 6,372.8km is implemented in `geo-dist.haversine`
+as `distance`.
+
 [Vincenty approximations](https://en.wikipedia.org/wiki/Vincenty%27s_formulae)
 using the WGS84 ellipsoid are in `geo-dist.vincenty`. There is
 currently an implementation of
